@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+instaloader
+python-dotenv
+pydantic
+motor==3.3.2
+pymongo==4.6.1
+minio
+httpx

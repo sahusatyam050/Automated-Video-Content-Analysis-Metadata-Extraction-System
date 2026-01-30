@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongodb:
+    image: mongo:latest
+    container_name: instagram-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: instagram_scraper
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - instagram-network
+
+  # MinIO Service
+  minio:
+    image: minio/minio:latest
+    container_name: instagram-minio
+    ports:
+      - "9000:9000"  # MinIO API
+      - "9001:9001"  # MinIO Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+    networks:
+      - instagram-network
+
+# Persistent volumes
+volumes:
+  mongodb_data:
+    driver: local
+  minio_data:
+    driver: local
+
+# Network for services to communicate
+networks:
+  instagram-network:
+    driver: bridge
